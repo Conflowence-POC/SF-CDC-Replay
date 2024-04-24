@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<salesforce:sfdc-config name="SF_config" doc:name="Salesforce Config" doc:id="1b6f66b3-9862-4623-84c5-54003b9f67e6" >
+		<salesforce:oauth-user-pass-connection consumerKey="3MVG9bZIBBVRES4FTmL5FQzl0JgTO9ffbpUEHXpPiuCbtAWGlyB9cuOSwTDTdm3TfzxpXwakV2HZcSGNiYNjh" consumerSecret="AB6756A429E42F7AC5019170F9208E370D67A850743E947B039D6A9BAEFA40A7" username="gayathrimule@conflowence.com" password="Mulesoft123" securityToken="6Gk72JtNU2LrSW1tNVwuriHO" />
+	</salesforce:sfdc-config>
+	<flow name="salesforce_cdc_replay_pocFlow" doc:id="a2856f6f-31b5-4115-9b58-81a947c46921" >
+		<salesforce:replay-channel-listener streamingChannel="/data/AccountChangeEvent" doc:name="Replay channel listener" doc:id="08a03c99-2f04-45da-940a-c06f659e35a9" config-ref="SF_config" replayOption="ONLY_NEW"/>
+		<ee:transform doc:name="payload-json" doc:id="df946592-435b-4c95-99ef-89e511d91709" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger-data" doc:id="324b9902-3e22-4138-941a-8233b238f888" message="#[payload]"/>
+	</flow>
+</mule>
